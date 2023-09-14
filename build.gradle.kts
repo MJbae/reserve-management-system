@@ -27,9 +27,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("com.github.usingsky:KoreanLunarCalendar:0.3.1")
-    implementation("org.springframework.boot:spring-boot-starter-webflux")
-    implementation("org.springframework.retry:spring-retry")
     runtimeOnly("com.mysql:mysql-connector-j")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
