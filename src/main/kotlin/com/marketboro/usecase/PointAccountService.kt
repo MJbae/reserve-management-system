@@ -20,5 +20,16 @@ class PointAccountService(
         pointAccount.earn(points)
     }
 
+    fun usePoint(memberId: String, points: Long) {
+        TODO()
+    }
+
+    fun loadHistory(memberId: String): PointHistoryDto {
+        TODO()
+    }
+
+    fun cancelPoint(memberId: String, points: Long) {
+        TODO()
+    }
 
 }
