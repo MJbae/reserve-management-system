@@ -2,22 +2,45 @@ version: '3.8'
 
 services:
   database:
-    image: mysql
+    container_name: mysql_db
     restart: always
+    image: mysql:8.0
+    ports:
+      - "3311:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
     environment:
       MYSQL_DATABASE: point_management
       MYSQL_ROOT_PASSWORD: password
-    ports:
-      - "3309:3306"
+      TZ: 'Asia/Seoul'
+    healthcheck:
+      test: ['CMD-SHELL', 'mysqladmin ping -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD']
+      interval: 10s
+      timeout: 2s
+      retries: 100
+    networks:
+      - default-network
 
   application:
-    image: gentlemj/point-management-system:latest
+    container_name: point_management_app
     restart: always
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "8080:55123"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3309/point_management
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_db:3306/point_management?useSSL=false&allowPublicKeyRetrieval=true
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: password
-    ports:
-      - "8080:8080"
     depends_on:
-      - database
+      database:
+        condition: service_healthy
+    networks:
+      - default-network
+
+networks:
+  default-network:
+
+volumes:
+  mysql-data:

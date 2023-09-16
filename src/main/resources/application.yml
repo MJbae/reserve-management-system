@@ -1,0 +1,24 @@
+server:
+  port: 55123
+  shutdown: graceful
+  compression:
+    enabled: true
+
+spring:
+  application:
+    name: Point Management System
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3311/point_management?useUnicode=true&serverTimezone=Asia/Seoul
+    username: root
+    password: password
+  jpa:
+    show-sql: false
+    generate-ddl: false
+    open-in-view: false
+    hibernate:
+      ddl-auto: create
+
+logging:
+  level:
+    ROOT: INFO

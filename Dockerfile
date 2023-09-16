@@ -1,9 +1,10 @@
 FROM openjdk:17
 
-ARG PROJECT="point-management-system"
+WORKDIR /app
 
-ENV PROJECT_NAME ${PROJECT}
+ENV PROJECT_NAME=point-management-system
 
-COPY ${PROJECT_NAME}/build/libs/*.jar ${PROJECT_NAME}.jar
+COPY ./build/libs/*.jar /app/${PROJECT_NAME}.jar
+EXPOSE 55123
 
-ENTRYPOINT java -jar ${PROJECT_NAME}.jar
+ENTRYPOINT java -jar -Duser.timezone=Asia/Seoul /app/$PROJECT_NAME.jar
