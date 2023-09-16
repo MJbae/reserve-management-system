@@ -18,4 +18,8 @@ class PointAccount(
     fun totalPoints(): Long {
         return points
     }
+
+    fun earn(newPoints: Long) {
+        this.points += newPoints
+    }
 }
