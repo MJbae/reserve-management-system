@@ -1,5 +1,7 @@
 package com.marketboro.controller
 
+import com.marketboro.controller.TestConst.EXISTING_MEMBER_ID
+import com.marketboro.controller.TestConst.NOT_EXISTING_MEMBER_ID
 import com.marketboro.domain.MemberId
 import com.marketboro.domain.PointAccount
 import com.marketboro.infra.PointAccountJpaRepository
@@ -10,16 +12,19 @@ import org.springframework.core.ParameterizedTypeReference
 import org.springframework.test.web.reactive.server.WebTestClient
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class PointIntegrationTest(
+class TotalPointIntegrationTest(
     private val testClient: WebTestClient,
     private val accountRepository: PointAccountJpaRepository
 ) : FunSpec({
-    val existingMemberId = MemberId("existingId")
-    val notExistingMemberId = MemberId("notExistingId")
+    val existingMemberId = MemberId(EXISTING_MEMBER_ID)
+    val notExistingMemberId = MemberId(NOT_EXISTING_MEMBER_ID)
+    lateinit var pointAccount: PointAccount
 
     beforeTest {
         accountRepository.deleteAll()
-        accountRepository.save(PointAccount(existingMemberId))
+
+        pointAccount = PointAccount(existingMemberId)
+        accountRepository.save(pointAccount)
     }
 
 
