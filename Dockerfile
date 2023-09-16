@@ -1,11 +1,9 @@
 FROM openjdk:17
 
-ARG PROJECT="api"
-ARG SPRING_ENV
+ARG PROJECT="point-management-system"
 
 ENV PROJECT_NAME ${PROJECT}
-ENV SPRING_PROFILES_ACTIVE ${SPRING_ENV}
 
 COPY ${PROJECT_NAME}/build/libs/*.jar ${PROJECT_NAME}.jar
 
-ENTRYPOINT java -jar -Dspring.profiles.active="$SPRING_PROFILES_ACTIVE" ${PROJECT_NAME}.jar
+ENTRYPOINT java -jar ${PROJECT_NAME}.jar

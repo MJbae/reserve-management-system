@@ -11,7 +11,7 @@ services:
       - "3309:3306"
 
   application:
-    image: gentlemj/point_management:latest
+    image: gentlemj/point-management-system:latest
     restart: always
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3309/point_management
