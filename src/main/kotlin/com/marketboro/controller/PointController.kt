@@ -1,7 +1,7 @@
 package com.marketboro.controller
 
-import com.marketboro.service.PointAccountService
-import com.marketboro.service.dto.TotalPointsDto
+import com.marketboro.usecase.PointAccountService
+import com.marketboro.usecase.dto.TotalPointsDto
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping

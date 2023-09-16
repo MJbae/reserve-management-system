@@ -1,4 +1,4 @@
-package com.marketboro.service.dto
+package com.marketboro.usecase.dto
 
 data class TotalPointsDto(
     val totalPoints: Long
