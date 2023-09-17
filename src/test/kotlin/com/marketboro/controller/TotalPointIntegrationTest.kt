@@ -1,7 +1,12 @@
 package com.marketboro.controller
 
-import com.marketboro.controller.TestConst.EXISTING_MEMBER_ID
-import com.marketboro.controller.TestConst.NOT_EXISTING_MEMBER_ID
+import com.marketboro.controller.helper.TestConst.EXISTING_MEMBER_ID
+import com.marketboro.controller.helper.TestConst.NOT_EXISTING_MEMBER_ID
+import com.marketboro.controller.helper.TestConst.POINTS_EARNING
+import com.marketboro.controller.helper.TestErrorCodes
+import com.marketboro.controller.helper.TestErrorRes
+import com.marketboro.controller.helper.TestTotalPointsDto
+import com.marketboro.controller.helper.earnPoint
 import com.marketboro.domain.MemberId
 import com.marketboro.domain.PointAccount
 import com.marketboro.infra.PointAccountJpaRepository
@@ -28,7 +33,9 @@ class TotalPointIntegrationTest(
     }
 
 
-    test("등록된 회원의 적립금 합계를 조회할 수 있다.") {
+    test("등록된 회원의 적립금 합계를 조회할 수 있다") {
+        testClient.earnPoint(existingMemberId, points = POINTS_EARNING)
+
         val res = testClient.get()
             .uri("/api/members/$existingMemberId/points/total")
             .exchange()
@@ -36,7 +43,7 @@ class TotalPointIntegrationTest(
             .expectBody(object : ParameterizedTypeReference<TestTotalPointsDto>() {})
             .returnResult().responseBody!!
 
-        res.totalPoints shouldBe 0
+        res.totalPoints shouldBe POINTS_EARNING
     }
 
     test("등록되지 않은 회원의 적립금 합계를 조회할 수 없다.") {
@@ -47,7 +54,3 @@ class TotalPointIntegrationTest(
     }
 
 })
-
-data class TestTotalPointsDto(
-    val totalPoints: Long
-)
