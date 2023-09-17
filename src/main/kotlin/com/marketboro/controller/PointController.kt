@@ -43,7 +43,7 @@ class PointController(
 
 
     @GetMapping("/{memberId}/points")
-    fun getPointTransactions(
+    fun loadHistory(
         @PathVariable memberId: String
     ): PointHistoryDto {
         return service.loadHistory(memberId)

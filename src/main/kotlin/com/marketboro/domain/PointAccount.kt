@@ -5,6 +5,10 @@ import jakarta.persistence.*
 @Entity
 class PointAccount(
     @Embedded
+    @AttributeOverride(name = "id", column = Column(name = "account_id", unique = true, length = 40))
+    val accountId: AccountId,
+
+    @Embedded
     @AttributeOverride(name = "id", column = Column(name = "member_id", unique = true, length = 40))
     val memberId: MemberId,
 ) {
