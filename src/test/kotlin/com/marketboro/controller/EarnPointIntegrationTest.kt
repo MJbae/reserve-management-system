@@ -1,14 +1,15 @@
 package com.marketboro.controller
 
-import com.marketboro.controller.helper.TestConst.EXISTING_MEMBER_ID
-import com.marketboro.controller.helper.TestConst.NOT_EXISTING_MEMBER_ID
 import com.marketboro.controller.helper.TestConst.POINTS_EARNING
 import com.marketboro.controller.helper.TestErrorCodes
 import com.marketboro.controller.helper.TestErrorRes
+import com.marketboro.controller.helper.TestIdGenerator
 import com.marketboro.controller.helper.TestPointTransactionReq
+import com.marketboro.domain.AccountId
 import com.marketboro.domain.MemberId
 import com.marketboro.domain.PointAccount
 import com.marketboro.infra.PointAccountJpaRepository
+import com.marketboro.infra.PointTransactionJpaRepository
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import org.springframework.boot.test.context.SpringBootTest
@@ -19,17 +20,21 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class EarnPointIntegrationTest(
     private val testClient: WebTestClient,
-    private val accountRepository: PointAccountJpaRepository
+    private val accountRepository: PointAccountJpaRepository,
+    private val transactionRepository: PointTransactionJpaRepository
 ) : FunSpec({
-    val existingMemberId = MemberId(EXISTING_MEMBER_ID)
-    val notExistingMemberId = MemberId(NOT_EXISTING_MEMBER_ID)
+    val idGenerator = TestIdGenerator()
+    val existingMemberId = MemberId(idGenerator.generate())
+    val existingAccountId = AccountId(idGenerator.generate())
+    val notExistingMemberId = MemberId(idGenerator.generate())
     lateinit var pointAccount: PointAccount
     lateinit var req: TestPointTransactionReq
 
     beforeTest {
+        transactionRepository.deleteAll()
         accountRepository.deleteAll()
 
-        pointAccount = PointAccount(existingMemberId)
+        pointAccount = PointAccount(existingAccountId, existingMemberId)
         accountRepository.save(pointAccount)
     }
 
