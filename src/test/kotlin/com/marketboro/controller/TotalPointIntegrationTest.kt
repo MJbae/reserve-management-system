@@ -46,11 +46,15 @@ class TotalPointIntegrationTest(
         res.totalPoints shouldBe POINTS_EARNING
     }
 
-    test("등록되지 않은 회원의 적립금 합계를 조회할 수 없다.") {
-        testClient.get()
+    test("등록되지 않은 회원의 적립금 합계를 조회할 수 없다") {
+        val res = testClient.get()
             .uri("/api/members/$notExistingMemberId/points/total")
             .exchange()
             .expectStatus().is4xxClientError
+            .expectBody(object : ParameterizedTypeReference<TestErrorRes>() {})
+            .returnResult().responseBody!!
+
+        res.code shouldBe TestErrorCodes.MEMBER_NOT_FOUND
     }
 
 })

@@ -1,5 +1,6 @@
 package com.marketboro.controller
 
+import com.marketboro.usecase.exceptions.InsufficientAmountException
 import com.marketboro.usecase.exceptions.MemberNotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -12,10 +13,22 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 class ExceptionControllerAdvice {
     private val logger = LoggerFactory.getLogger(javaClass)
 
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(value = [InsufficientAmountException::class])
+    fun handleInsufficientAmountException(e: InsufficientAmountException): ErrorRes {
+        return ErrorRes(ErrorCodes.INSUFFICIENT_POINTS, e.message)
+    }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = [MemberNotFoundException::class])
     fun handleMemberNotFoundException(e: MemberNotFoundException): ErrorRes {
         return ErrorRes(ErrorCodes.MEMBER_NOT_FOUND, e.message)
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(value = [IllegalStateException::class])
+    fun handleIllegalStateException(e: IllegalStateException): ErrorRes {
+        return ErrorRes(ErrorCodes.STATE_CONFLICT, e.message)
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -38,6 +51,9 @@ data class ErrorRes(val code: Int, val message: String?)
 object ErrorCodes {
     const val BAD_REQUEST = 400000
     const val MEMBER_NOT_FOUND = 400001
+
+    const val STATE_CONFLICT = 409000
+    const val INSUFFICIENT_POINTS = 409001
 
     const val INTERNAL_SERVER = 500000
 }
