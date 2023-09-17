@@ -17,8 +17,10 @@ spring:
     generate-ddl: false
     open-in-view: false
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
 
 logging:
   level:
     ROOT: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql: TRACE
