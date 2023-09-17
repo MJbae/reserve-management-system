@@ -19,7 +19,16 @@ class PointAccount(
         return points
     }
 
-    fun earn(newPoints: Long) {
-        this.points += newPoints
+    fun earn(amount: Long) {
+        this.points += amount
     }
+
+    fun deduct(amount: Long) {
+        this.points -= amount
+    }
+
+    fun canDeduct(amount: Long): Boolean {
+        return this.points >= amount
+    }
+
 }
