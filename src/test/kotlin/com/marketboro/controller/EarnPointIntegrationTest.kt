@@ -24,15 +24,18 @@ class EarnPointIntegrationTest(
     private val transactionRepository: PointTransactionJpaRepository
 ) : FunSpec({
     val idGenerator = TestIdGenerator()
-    val existingMemberId = MemberId(idGenerator.generate())
-    val existingAccountId = AccountId(idGenerator.generate())
-    val notExistingMemberId = MemberId(idGenerator.generate())
+    lateinit var existingMemberId : MemberId
+    lateinit var existingAccountId : AccountId
+    lateinit var notExistingMemberId : MemberId
     lateinit var pointAccount: PointAccount
     lateinit var req: TestPointTransactionReq
 
     beforeTest {
         transactionRepository.deleteAll()
         accountRepository.deleteAll()
+        existingMemberId = MemberId(idGenerator.generate())
+        existingAccountId = AccountId(idGenerator.generate())
+        notExistingMemberId = MemberId(idGenerator.generate())
 
         pointAccount = PointAccount(existingAccountId, existingMemberId)
         accountRepository.save(pointAccount)
