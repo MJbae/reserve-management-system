@@ -24,3 +24,14 @@ fun WebTestClient.earnPoint(memberId: MemberId, points: Long) {
         .exchange()
         .expectStatus().is2xxSuccessful
 }
+
+fun WebTestClient.usePoint(memberId: MemberId, points: Long) {
+    val req = TestPointTransactionReq(points = points)
+
+    this.put()
+        .uri("/api/members/$memberId/points/use")
+        .contentType(MediaType.APPLICATION_JSON)
+        .bodyValue(req)
+        .exchange()
+        .expectStatus().is2xxSuccessful
+}

@@ -1,8 +1,19 @@
 package com.marketboro.controller.helper
 
+import com.marketboro.domain.TransactionType
+
 
 data class TestTotalPointsDto(
     val totalPoints: Long
+)
+
+data class TestPointHistoryDto(
+    val transactions: List<TestTransactionDto>
+)
+
+data class TestTransactionDto(
+    val type: TransactionType,
+    val amount: Long
 )
 
 data class TestErrorRes(
