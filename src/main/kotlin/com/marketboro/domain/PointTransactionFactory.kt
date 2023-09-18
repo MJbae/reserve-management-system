@@ -11,7 +11,7 @@ class PointTransactionFactory {
     }
 
     fun createCancelTrans(useTrans: PointTransaction): PointTransaction {
-        return PointTransaction(type = TransactionType.CANCEL, accountId = useTrans.accountId, points = useTrans.points)
+        return PointTransaction(type = TransactionType.CANCEL, accountId = useTrans.accountId, points = -useTrans.points)
     }
 }
 
