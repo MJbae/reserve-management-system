@@ -2,6 +2,7 @@ package com.marketboro.controller
 
 import com.marketboro.usecase.exceptions.InsufficientAmountException
 import com.marketboro.usecase.exceptions.MemberNotFoundException
+import com.marketboro.usecase.exceptions.UseTransNotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -12,6 +13,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 @RestControllerAdvice(basePackageClasses = [ExceptionControllerAdvice::class])
 class ExceptionControllerAdvice {
     private val logger = LoggerFactory.getLogger(javaClass)
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(value = [UseTransNotFoundException::class])
+    fun handleUseTransNotFoundException(e: UseTransNotFoundException): ErrorRes {
+        return ErrorRes(ErrorCodes.USE_TRANS_NOT_FOUND, e.message)
+    }
 
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(value = [InsufficientAmountException::class])
@@ -54,6 +61,7 @@ object ErrorCodes {
 
     const val STATE_CONFLICT = 409000
     const val INSUFFICIENT_POINTS = 409001
+    const val USE_TRANS_NOT_FOUND = 409002
 
     const val INTERNAL_SERVER = 500000
 }

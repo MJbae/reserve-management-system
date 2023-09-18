@@ -9,5 +9,9 @@ class PointTransactionFactory {
     fun createUseTrans(accountId: AccountId, amount: Long): PointTransaction {
         return PointTransaction(type = TransactionType.USE, accountId = accountId, points = amount)
     }
+
+    fun createCancelTrans(useTrans: PointTransaction): PointTransaction {
+        return PointTransaction(type = TransactionType.CANCEL, accountId = useTrans.accountId, points = useTrans.points)
+    }
 }
 

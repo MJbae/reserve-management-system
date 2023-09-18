@@ -51,9 +51,8 @@ class PointController(
 
     @PutMapping("/{memberId}/points/cancel")
     fun cancelPoint(
-        @PathVariable memberId: String,
-        @RequestBody req: PointTransactionReq
+        @PathVariable memberId: String
     ) {
-        service.cancelPoint(memberId, req.points)
+        service.cancelPoint(memberId)
     }
 }

@@ -6,6 +6,7 @@ import com.marketboro.usecase.dto.TotalPointsDto
 import com.marketboro.usecase.dto.TransactionDto
 import com.marketboro.usecase.exceptions.InsufficientAmountException
 import com.marketboro.usecase.exceptions.MemberNotFoundException
+import com.marketboro.usecase.exceptions.UseTransNotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -55,8 +56,14 @@ class PointAccountService(
     }
 
     @Transactional
-    fun cancelPoint(memberId: String, points: Long) {
-        TODO()
+    fun cancelPoint(memberId: String) {
+        val pointAccount = repository.find(MemberId(memberId)) ?: throw MemberNotFoundException(MemberId(memberId))
+        val latestUseTrans = transRepository.findLatestUseTrans(pointAccount.accountId)
+            ?: throw UseTransNotFoundException(pointAccount.accountId)
+        val cancelTrans = transFactory.createCancelTrans(latestUseTrans)
+        transRepository.save(cancelTrans)
+
+        pointAccount.sumPoints(cancelTrans.points)
     }
 
 }
