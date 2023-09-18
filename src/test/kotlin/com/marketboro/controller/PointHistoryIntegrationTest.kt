@@ -11,6 +11,7 @@ import com.marketboro.infra.PointAccountJpaRepository
 import com.marketboro.infra.PointTransactionJpaRepository
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.shouldBe
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.core.ParameterizedTypeReference
@@ -60,6 +61,21 @@ class PointHistoryIntegrationTest(
             .returnResult().responseBody!!
 
         res.code shouldBe TestErrorCodes.MEMBER_NOT_FOUND
+    }
+
+    test("적립금 사용 취소 내역를 조회할 수 없다") {
+        testClient.earnPoint(existingMemberId, points = POINTS_EARNING)
+        testClient.usePoint(existingMemberId, points = POINTS_USING)
+        testClient.cancelPoint(existingMemberId)
+
+        val res = testClient.get()
+            .uri("/api/members/$existingMemberId/points")
+            .exchange()
+            .expectStatus().is2xxSuccessful
+            .expectBody(object : ParameterizedTypeReference<TestPointHistoryDto>() {})
+            .returnResult().responseBody!!
+
+        res.transactions shouldNotContain TestTransactionDto(type = TransactionType.CANCEL, amount = POINTS_USING)
     }
 
 })

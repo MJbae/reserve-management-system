@@ -35,3 +35,11 @@ fun WebTestClient.usePoint(memberId: MemberId, points: Long) {
         .exchange()
         .expectStatus().is2xxSuccessful
 }
+
+fun WebTestClient.cancelPoint(memberId: MemberId) {
+    this.put()
+        .uri("/api/members/$memberId/points/cancel")
+        .contentType(MediaType.APPLICATION_JSON)
+        .exchange()
+        .expectStatus().is2xxSuccessful
+}
