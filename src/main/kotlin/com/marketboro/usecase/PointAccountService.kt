@@ -12,9 +12,9 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class PointAccountService(
     private val repository: PointAccountRepository,
-    private val transactionRepository: PointTransactionRepository
+    private val transRepository: PointTransactionRepository
 ) {
-    private val factory = PointTransactionFactory()
+    private val transFactory = PointTransactionFactory()
 
     @Transactional(readOnly = true)
     fun getTotalPoints(memberId: String): TotalPointsDto {
@@ -25,9 +25,11 @@ class PointAccountService(
     @Transactional
     fun earnPoint(memberId: String, points: Long) {
         val pointAccount = repository.find(MemberId(memberId)) ?: throw MemberNotFoundException(MemberId(memberId))
-        val newTransaction = factory.createEarnTransaction(accountId = pointAccount.accountId, amount = points)
-        transactionRepository.save(newTransaction)
-        pointAccount.earn(points)
+
+        val earnTrans = transFactory.createEarnTrans(accountId = pointAccount.accountId, amount = points)
+        transRepository.save(earnTrans)
+
+        pointAccount.sumPoints(earnTrans.points)
     }
 
     @Transactional
@@ -38,15 +40,16 @@ class PointAccountService(
             throw InsufficientAmountException(pointAccount.totalPoints())
         }
 
-        val newTransaction = factory.createUseTransaction(accountId = pointAccount.accountId, amount = points)
-        transactionRepository.save(newTransaction)
-        pointAccount.deduct(points)
+        val useTrans = transFactory.createUseTrans(accountId = pointAccount.accountId, amount = -points)
+        transRepository.save(useTrans)
+
+        pointAccount.sumPoints(useTrans.points)
     }
 
     @Transactional(readOnly = true)
     fun loadHistory(memberId: String): PointHistoryDto {
         val pointAccount = repository.find(MemberId(memberId)) ?: throw MemberNotFoundException(MemberId(memberId))
-        val transactions = transactionRepository.findAll(pointAccount.accountId)
+        val transactions = transRepository.findAll(pointAccount.accountId)
 
         return PointHistoryDto(transactions.map { TransactionDto(type = it.type, amount = it.points) })
     }

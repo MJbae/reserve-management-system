@@ -14,10 +14,10 @@ class PointTransaction(
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    val type: TransactionType,
+    var type: TransactionType,
 
     @Column(nullable = false)
-    val transactionDate: LocalDateTime = LocalDateTime.now()
+    val createdAt: LocalDateTime = LocalDateTime.now()
 ){
     @Id
     @TableGenerator(name = "PointTransactionIdGenerator", table = "sequence", allocationSize = 100)

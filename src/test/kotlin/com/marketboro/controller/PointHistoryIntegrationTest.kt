@@ -48,7 +48,7 @@ class PointHistoryIntegrationTest(
             .returnResult().responseBody!!
 
         res.transactions shouldContain TestTransactionDto(type = TransactionType.EARN, amount = POINTS_EARNING)
-        res.transactions shouldContain TestTransactionDto(type = TransactionType.USE, amount = POINTS_USING)
+        res.transactions shouldContain TestTransactionDto(type = TransactionType.USE, amount = -POINTS_USING)
     }
 
     test("등록되지 않은 회원의 적립금 사용/적립 내역를 조회할 수 없다") {
