@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 
@@ -20,23 +21,28 @@ class PointController(
 ) {
     @GetMapping("/{memberId}/points/total")
     fun getTotalPoints(
-        @PathVariable memberId: String
+        @PathVariable
+        memberId: String
     ): TotalPointsDto {
         return service.getTotalPoints(memberId)
     }
 
     @PostMapping("/{memberId}/points")
     fun earnPoint(
-        @PathVariable memberId: String,
-        @RequestBody req: PointTransactionReq
+        @PathVariable
+        memberId: String,
+        @RequestBody
+        req: PointTransactionReq
     ) {
         service.earnPoint(memberId, req.points)
     }
 
     @PutMapping("/{memberId}/points/use")
     fun usePoint(
-        @PathVariable memberId: String,
-        @RequestBody req: PointTransactionReq
+        @PathVariable
+        memberId: String,
+        @RequestBody
+        req: PointTransactionReq
     ) {
         service.usePoint(memberId, req.points)
     }
@@ -44,14 +50,20 @@ class PointController(
 
     @GetMapping("/{memberId}/points")
     fun loadHistory(
-        @PathVariable memberId: String
+        @PathVariable
+        memberId: String,
+        @RequestParam(name="pageNum", defaultValue = "0")
+        pageNum: Int,
+        @RequestParam(name="pageSize", defaultValue = "10")
+        pageSize: Int
     ): PointHistoryDto {
-        return service.loadHistory(memberId)
+        return service.loadHistory(memberId, pageNum, pageSize)
     }
 
     @PutMapping("/{memberId}/points/cancel")
     fun cancelPoint(
-        @PathVariable memberId: String
+        @PathVariable
+        memberId: String
     ) {
         service.cancelPoint(memberId)
     }

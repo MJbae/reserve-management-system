@@ -3,10 +3,10 @@ package com.marketboro.usecase
 import com.marketboro.domain.*
 import com.marketboro.usecase.dto.PointHistoryDto
 import com.marketboro.usecase.dto.TotalPointsDto
-import com.marketboro.usecase.dto.TransactionDto
 import com.marketboro.usecase.exceptions.InsufficientAmountException
 import com.marketboro.usecase.exceptions.MemberNotFoundException
 import com.marketboro.usecase.exceptions.UseTransNotFoundException
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -48,19 +48,23 @@ class PointAccountService(
     }
 
     @Transactional(readOnly = true)
-    fun loadHistory(memberId: String): PointHistoryDto {
+    fun loadHistory(memberId: String, pageNum: Int, pageSize: Int): PointHistoryDto {
         val pointAccount = repository.find(MemberId(memberId)) ?: throw MemberNotFoundException(MemberId(memberId))
-        val transactions = transRepository.findAll(pointAccount.accountId)
 
-        return PointHistoryDto(transactions.map { TransactionDto(type = it.type, amount = it.points) })
+        val transactionsPage = transRepository.findByLatest(pointAccount.accountId,
+            types = setOf(TransactionType.USE, TransactionType.EARN), pageReq = PageRequest.of(pageNum, pageSize))
+        return PointHistoryDto(transactionsPage)
     }
 
     @Transactional
     fun cancelPoint(memberId: String) {
         val pointAccount = repository.find(MemberId(memberId)) ?: throw MemberNotFoundException(MemberId(memberId))
-        val latestUseTrans = transRepository.findLatestUseTrans(pointAccount.accountId)
-            ?: throw UseTransNotFoundException(pointAccount.accountId)
-        val cancelTrans = transFactory.createCancelTrans(latestUseTrans)
+
+        val latestUseTrans = transRepository.findByLatest(pointAccount.accountId,
+            types = setOf(TransactionType.USE), pageReq = PageRequest.of(0, 1))
+        if (latestUseTrans.isEmpty) throw UseTransNotFoundException(pointAccount.accountId)
+
+        val cancelTrans = transFactory.createCancelTrans(latestUseTrans.first())
         transRepository.save(cancelTrans)
 
         pointAccount.sumPoints(cancelTrans.points)
