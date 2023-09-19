@@ -3,8 +3,11 @@ package com.marketboro.usecase
 import com.marketboro.domain.*
 import com.marketboro.usecase.exceptions.MemberNotFoundException
 import com.marketboro.usecase.exceptions.UseTransNotFoundException
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import org.springframework.orm.ObjectOptimisticLockingFailureException
+import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -15,6 +18,8 @@ class PointAccountService(
 ) {
     private val transFactory = PointTransactionFactory()
 
+
+    @Retryable(value = [ObjectOptimisticLockingFailureException::class, DataIntegrityViolationException::class])
     @Transactional
     fun earnPoint(memberId: String, amount: Int) {
         val pointAccount = repository.find(MemberId(memberId)) ?: throw MemberNotFoundException(MemberId(memberId))
@@ -25,6 +30,7 @@ class PointAccountService(
         pointAccount.addPoints(earnTrans.points)
     }
 
+    @Retryable(value = [ObjectOptimisticLockingFailureException::class, DataIntegrityViolationException::class])
     @Transactional
     fun usePoint(memberId: String, amount: Int) {
         val pointAccount = repository.find(MemberId(memberId)) ?: throw MemberNotFoundException(MemberId(memberId))
@@ -35,6 +41,8 @@ class PointAccountService(
         pointAccount.deductPoints(useTrans.points)
     }
 
+
+    @Retryable(value = [ObjectOptimisticLockingFailureException::class, DataIntegrityViolationException::class])
     @Transactional
     fun cancelPoint(memberId: String) {
         val pointAccount = repository.find(MemberId(memberId)) ?: throw MemberNotFoundException(MemberId(memberId))

@@ -21,6 +21,9 @@ class PointAccount(
 
     private var points: Int = 0
 
+    @Version
+    private var version: Int = 0
+
     fun totalPoints(): Int {
         return points
     }
