@@ -40,7 +40,7 @@ chmod +x build_and_run.sh && ./build_and_run.sh
 
 
 ### IV. 테스트 구조
-고전파 스타일로 테스트를 구성했습니다. 테스트에 대한 철학은 ['단위 테스트 by 블라디미르 코리코프'](https://www.notion.so/Unit-Testing-Vladimir-Khorikov-13252c93459742ee9f72e5c6f0cbd33a)의 영향을 받았습니다.
+고전파 스타일로 테스트를 구성했습니다. 테스트에 대한 철학은 ['단위 테스트 by 블라디미르 코리코프'](https://studynote.oopy.io/books/15)의 영향을 받았습니다.
 - e2e 테스트: IntelliJ IDE에서 지원하는 .http을 활용하여 5개의 API를 실제 호출하고 정상 동작여부를 검증합니다.
 - 통합 테스트: Kotest 기반으로 5개 API의 13개 핵심 동작에 대해 검증합니다.
 - 단위 테스트: 핵심 도메인 모델인 PointAccount의 주요 비지니스 로직을 검증합니다.
