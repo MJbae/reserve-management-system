@@ -37,8 +37,4 @@ class PointAccount(
 
         points -= amount
     }
-
-    fun canDeduct(amount: Int): Boolean {
-        return this.points >= amount
-    }
 }

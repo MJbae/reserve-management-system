@@ -22,12 +22,8 @@ data class TestErrorRes(
 )
 
 object TestErrorCodes {
-    const val BAD_REQUEST = 400000
     const val MEMBER_NOT_FOUND = 400001
 
-    const val STATE_CONFLICT = 409000
     const val INSUFFICIENT_POINTS = 409001
     const val USE_TRANS_NOT_FOUND = 409002
-
-    const val INTERNAL_SERVER = 500000
 }
