@@ -1,6 +1,7 @@
 package com.marketboro.controller
 
-import com.marketboro.usecase.exceptions.InsufficientAmountException
+import com.marketboro.domain.exceptions.InsufficientAmountException
+import com.marketboro.domain.exceptions.NegativePointAmountException
 import com.marketboro.usecase.exceptions.MemberNotFoundException
 import com.marketboro.usecase.exceptions.UseTransNotFoundException
 import org.slf4j.LoggerFactory
@@ -26,16 +27,22 @@ class ExceptionControllerAdvice {
         return ErrorRes(ErrorCodes.INSUFFICIENT_POINTS, e.message)
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(value = [MemberNotFoundException::class])
-    fun handleMemberNotFoundException(e: MemberNotFoundException): ErrorRes {
-        return ErrorRes(ErrorCodes.MEMBER_NOT_FOUND, e.message)
-    }
-
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(value = [IllegalStateException::class])
     fun handleIllegalStateException(e: IllegalStateException): ErrorRes {
         return ErrorRes(ErrorCodes.STATE_CONFLICT, e.message)
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = [NegativePointAmountException::class])
+    fun handleNegativePointAmountException(e: NegativePointAmountException): ErrorRes {
+        return ErrorRes(ErrorCodes.NEGATIVE_POINT_AMOUNT, e.message)
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = [MemberNotFoundException::class])
+    fun handleMemberNotFoundException(e: MemberNotFoundException): ErrorRes {
+        return ErrorRes(ErrorCodes.MEMBER_NOT_FOUND, e.message)
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -58,6 +65,7 @@ data class ErrorRes(val code: Int, val message: String?)
 object ErrorCodes {
     const val BAD_REQUEST = 400000
     const val MEMBER_NOT_FOUND = 400001
+    const val NEGATIVE_POINT_AMOUNT = 400002
 
     const val STATE_CONFLICT = 409000
     const val INSUFFICIENT_POINTS = 409001
