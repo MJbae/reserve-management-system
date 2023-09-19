@@ -18,7 +18,7 @@ class PointTransaction(
     val type: TransactionType,
 
     @Column(nullable = false)
-    val createdAt: LocalDateTime = LocalDateTime.now(),
+    private val createdAt: LocalDateTime = LocalDateTime.now(),
 ) {
     @Id
     @TableGenerator(name = "PointTransactionIdGenerator", table = "sequence", allocationSize = 100)

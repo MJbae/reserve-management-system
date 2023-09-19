@@ -4,7 +4,7 @@ import jakarta.persistence.Embeddable
 
 @Embeddable
 data class MemberId(
-    val id: String
+    private val id: String
 ) {
     override fun toString(): String {
         return this.id
