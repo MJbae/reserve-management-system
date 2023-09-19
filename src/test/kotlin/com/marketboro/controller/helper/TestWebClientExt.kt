@@ -14,8 +14,8 @@ fun WebTestClient.getTotalPoints(memberId: MemberId): TestTotalPointsDto {
         .returnResult().responseBody!!
 }
 
-fun WebTestClient.earnPoint(memberId: MemberId, points: Long) {
-    val req = TestPointTransactionReq(points = points)
+fun WebTestClient.earnPoint(memberId: MemberId, points: Int) {
+    val req = TestPointTransactionReq(points)
 
     this.post()
         .uri("/api/members/$memberId/points")
@@ -25,8 +25,8 @@ fun WebTestClient.earnPoint(memberId: MemberId, points: Long) {
         .expectStatus().is2xxSuccessful
 }
 
-fun WebTestClient.usePoint(memberId: MemberId, points: Long) {
-    val req = TestPointTransactionReq(points = points)
+fun WebTestClient.usePoint(memberId: MemberId, points: Int) {
+    val req = TestPointTransactionReq(points)
 
     this.put()
         .uri("/api/members/$memberId/points/use")

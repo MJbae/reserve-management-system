@@ -4,7 +4,7 @@ import com.marketboro.domain.TransactionType
 
 
 data class TestTotalPointsDto(
-    val totalPoints: Long
+    val totalPoints: Int
 )
 
 data class TestPointHistoryDto(
@@ -13,7 +13,7 @@ data class TestPointHistoryDto(
 
 data class TestTransactionDto(
     val type: TransactionType,
-    val amount: Long
+    val amount: Int
 )
 
 data class TestErrorRes(

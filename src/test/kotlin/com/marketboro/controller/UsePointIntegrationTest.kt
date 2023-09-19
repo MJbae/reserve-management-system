@@ -38,8 +38,8 @@ class UsePointIntegrationTest(
     }
 
     test("등록된 회원은 적립금을 사용할 수 있다") {
-        val pointsToEarn = 10L
-        val pointsToUse = 10L
+        val pointsToEarn = 10
+        val pointsToUse = 10
         testClient.earnPoint(existingMemberId, points = pointsToEarn)
         req = TestPointTransactionReq(points = pointsToUse)
 
@@ -52,7 +52,7 @@ class UsePointIntegrationTest(
     }
 
     test("등록되지 않은 회원은 적립금을 사용할 수 없다") {
-        val pointsToUse = 10L
+        val pointsToUse = 10
         req = TestPointTransactionReq(points = pointsToUse)
 
         val res = testClient.put()
@@ -67,8 +67,8 @@ class UsePointIntegrationTest(
     }
 
     test("적립된 포인트 보다 많은 금액을 사용할 수 없다") {
-        val pointsToEarn = 10L
-        val pointsToUse = 15L
+        val pointsToEarn = 10
+        val pointsToUse = 15
         testClient.earnPoint(existingMemberId, points = pointsToEarn)
         req = TestPointTransactionReq(points = pointsToUse)
 

@@ -37,8 +37,8 @@ class CancelPointIntegrationTest(
     }
 
     test("등록된 회원은 사용한 적립금을 취소할 수 있다") {
-        val pointsToEarn = 10L
-        val pointsToUse = 5L
+        val pointsToEarn = 10
+        val pointsToUse = 5
         testClient.earnPoint(existingMemberId, points = pointsToEarn)
         testClient.usePoint(existingMemberId, points = pointsToUse)
 
@@ -62,7 +62,7 @@ class CancelPointIntegrationTest(
     }
 
     test("사용하지 않은 적립금을 취소할 수 없다") {
-        val pointsToEarn = 10L
+        val pointsToEarn = 10
         testClient.earnPoint(existingMemberId, points = pointsToEarn)
 
         val res = testClient.put()
