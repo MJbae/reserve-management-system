@@ -1,0 +1,25 @@
+### 회원별 적립금 합계 조회 API
+GET {{host}}/api/members/{{memberId}}/points/total
+
+### 회원별 적립금 적립/사용 내역 조회 API
+GET {{host}}/api/members/{{memberId}}/points
+
+### 회원별 적립금 적립 API
+POST {{host}}/api/members/{{memberId}}/points
+Content-Type: application/json
+
+{
+  "points": 20
+}
+
+### 회원별 적립금 사용 API
+PUT {{host}}/api/members/{{memberId}}/points/use
+Content-Type: application/json
+
+{
+  "points": 10
+}
+
+
+### 회원별 적립금 사용취소 API
+PUT {{host}}/api/members/{{memberId}}/points/cancel
