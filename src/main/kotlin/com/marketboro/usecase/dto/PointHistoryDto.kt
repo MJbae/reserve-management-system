@@ -18,5 +18,5 @@ data class PointHistoryDto(
 
 data class TransactionDto(
     val type: TransactionType,
-    val amount: Long,
+    val amount: Int,
 )

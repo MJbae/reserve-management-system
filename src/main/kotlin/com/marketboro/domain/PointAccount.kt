@@ -1,5 +1,7 @@
 package com.marketboro.domain
 
+import com.marketboro.domain.exceptions.InsufficientAmountException
+import com.marketboro.domain.exceptions.NegativePointAmountException
 import jakarta.persistence.*
 
 @Entity
@@ -17,20 +19,26 @@ class PointAccount(
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "PointAccountIdGenerator")
     private var id: Long? = null
 
-    private var points: Long = 0
+    private var points: Int = 0
 
-    fun totalPoints(): Long {
+    fun totalPoints(): Int {
         return points
     }
 
-    fun sumPoints(amount: Long) {
-        this.points += amount
+    fun addPoints(amount: Int) {
+        if (amount < 0) throw NegativePointAmountException(amount)
 
+        points += amount
     }
 
-    fun canDeduct(amount: Long): Boolean {
+    fun deductPoints(amount: Int) {
+        if (amount < 0) throw NegativePointAmountException(amount)
+        if (this.points < amount) throw InsufficientAmountException(this.points)
+
+        points -= amount
+    }
+
+    fun canDeduct(amount: Int): Boolean {
         return this.points >= amount
     }
-
-
 }

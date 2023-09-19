@@ -11,7 +11,7 @@ class PointTransaction(
     val accountId: AccountId,
 
     @Column(nullable = false)
-    var points: Long,
+    val points: Int,
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
