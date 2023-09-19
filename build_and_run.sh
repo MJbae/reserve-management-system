@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# DB 의존성을 감안하여 테스트 없이 빌드 파일을 생성합니다.
+# DB 의존성을 감안하여 테스트 없이 빌드합니다
 ./gradlew build -x test
 
 # 로컬머신 환경에 따라 docker-compose를 실행합니다
