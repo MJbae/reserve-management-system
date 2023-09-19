@@ -1,6 +1,7 @@
 package com.marketboro.controller
 
 import com.marketboro.controller.helper.*
+import com.marketboro.controller.helper.TestConst.EXISTING_MEMBER_ID
 import com.marketboro.domain.AccountId
 import com.marketboro.domain.MemberId
 import com.marketboro.domain.PointAccount
@@ -20,16 +21,15 @@ class UsePointIntegrationTest(
     private val transactionRepository: PointTransactionJpaRepository
 ) : FunSpec({
     val idGenerator = TestIdGenerator()
-    lateinit var existingMemberId : MemberId
-    lateinit var existingAccountId : AccountId
-    lateinit var notExistingMemberId : MemberId
+    val existingMemberId = MemberId(EXISTING_MEMBER_ID)
+    lateinit var existingAccountId: AccountId
+    lateinit var notExistingMemberId: MemberId
     lateinit var pointAccount: PointAccount
     lateinit var req: TestPointTransactionReq
 
     beforeTest {
         transactionRepository.deleteAll()
         accountRepository.deleteAll()
-        existingMemberId = MemberId(idGenerator.generate())
         existingAccountId = AccountId(idGenerator.generate())
         notExistingMemberId = MemberId(idGenerator.generate())
 

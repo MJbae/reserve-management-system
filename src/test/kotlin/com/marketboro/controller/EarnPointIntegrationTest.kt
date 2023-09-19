@@ -1,10 +1,7 @@
 package com.marketboro.controller
 
+import com.marketboro.controller.helper.*
 import com.marketboro.controller.helper.TestConst.POINTS_EARNING
-import com.marketboro.controller.helper.TestErrorCodes
-import com.marketboro.controller.helper.TestErrorRes
-import com.marketboro.controller.helper.TestIdGenerator
-import com.marketboro.controller.helper.TestPointTransactionReq
 import com.marketboro.domain.AccountId
 import com.marketboro.domain.MemberId
 import com.marketboro.domain.PointAccount
@@ -24,7 +21,7 @@ class EarnPointIntegrationTest(
     private val transactionRepository: PointTransactionJpaRepository
 ) : FunSpec({
     val idGenerator = TestIdGenerator()
-    lateinit var existingMemberId : MemberId
+    val existingMemberId = MemberId(TestConst.EXISTING_MEMBER_ID)
     lateinit var existingAccountId : AccountId
     lateinit var notExistingMemberId : MemberId
     lateinit var pointAccount: PointAccount
@@ -33,7 +30,6 @@ class EarnPointIntegrationTest(
     beforeTest {
         transactionRepository.deleteAll()
         accountRepository.deleteAll()
-        existingMemberId = MemberId(idGenerator.generate())
         existingAccountId = AccountId(idGenerator.generate())
         notExistingMemberId = MemberId(idGenerator.generate())
 

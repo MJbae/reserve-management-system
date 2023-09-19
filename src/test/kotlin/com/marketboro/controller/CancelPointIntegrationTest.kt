@@ -20,7 +20,7 @@ class CancelPointIntegrationTest(
     private val transactionRepository: PointTransactionJpaRepository
 ) : FunSpec({
     val idGenerator = TestIdGenerator()
-    lateinit var existingMemberId : MemberId
+    val existingMemberId = MemberId(TestConst.EXISTING_MEMBER_ID)
     lateinit var existingAccountId : AccountId
     lateinit var notExistingMemberId : MemberId
     lateinit var pointAccount: PointAccount
@@ -28,7 +28,6 @@ class CancelPointIntegrationTest(
     beforeTest {
         transactionRepository.deleteAll()
         accountRepository.deleteAll()
-        existingMemberId = MemberId(idGenerator.generate())
         existingAccountId = AccountId(idGenerator.generate())
         notExistingMemberId = MemberId(idGenerator.generate())
 

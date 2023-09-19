@@ -24,7 +24,7 @@ class PointHistoryIntegrationTest(
     private val transactionRepository: PointTransactionJpaRepository
 ) : FunSpec({
     val idGenerator = TestIdGenerator()
-    val existingMemberId = MemberId(idGenerator.generate())
+    val existingMemberId = MemberId(TestConst.EXISTING_MEMBER_ID)
     val existingAccountId = AccountId(idGenerator.generate())
     val notExistingMemberId = MemberId(idGenerator.generate())
     lateinit var pointAccount: PointAccount
