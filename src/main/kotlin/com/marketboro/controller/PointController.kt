@@ -1,6 +1,8 @@
 package com.marketboro.controller
 
 import com.marketboro.controller.req.PointTransactionReq
+import com.marketboro.usecase.GetTotalPointsService
+import com.marketboro.usecase.LoadPointHistoryService
 import com.marketboro.usecase.PointAccountService
 import com.marketboro.usecase.dto.PointHistoryDto
 import com.marketboro.usecase.dto.TotalPointsDto
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/members")
 class PointController(
+    private val totalPointsService: GetTotalPointsService,
+    private val loadPointHistoryService: LoadPointHistoryService,
     private val service: PointAccountService
 ) {
     @GetMapping("/{memberId}/points/total")
@@ -24,7 +28,7 @@ class PointController(
         @PathVariable
         memberId: String
     ): TotalPointsDto {
-        return service.getTotalPoints(memberId)
+        return totalPointsService.getTotalPoints(memberId)
     }
 
     @PostMapping("/{memberId}/points")
@@ -57,7 +61,7 @@ class PointController(
         @RequestParam(name="pageSize", defaultValue = "10")
         pageSize: Int
     ): PointHistoryDto {
-        return service.loadHistory(memberId, pageNum, pageSize)
+        return loadPointHistoryService.loadHistory(memberId, pageNum, pageSize)
     }
 
     @PutMapping("/{memberId}/points/cancel")
