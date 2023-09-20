@@ -20,12 +20,12 @@
 chmod +x build_and_run.sh && ./build_and_run.sh
 ```
 - 위 스크립트는 로컬 머신 프로세서에 따라 docker-compose 파일을 선택하여 실행 환경을 구축합니다.
-- docker 기반 실행환경의 서버 포트는 **8080**입니다. 다만 IDE로 서버를 직접 실행하신다면 포트는 **55123**입니다. 
-- DB 포트는 **3311**입니다. ID와 PW는 각각 **root**, **password**입니다.
+- docker 기반 실행환경의 **서버 포트**는 `8080`입니다. 다만 IDE로 서버를 직접 실행하신다면 `55123`입니다. 
+- **DB 포트**는 `3311`입니다. **ID**와 **PW**는 각각 `root`, `password`입니다.
 
 ### II. HTTP API 요청 방법
-- docker 기반 실행환경의 **host**는 **http://localhost:8080**입니다. 다만 IDE로 서버를 직접 실행하신다면 포트는 **http://localhost:55123**입니다.
-- HTTP API 요청의 공통 path param인 **memberId**는 '**128c4d0f68a34e1ca3c8b51cc01a4b71**'를 사용하실 수 있습니다.
+- docker 기반 실행환경의 **host**는 `http://localhost:8080`입니다. 다만 IDE로 서버를 직접 실행하신다면 host는 `http://localhost:55123`입니다.
+- HTTP API 요청의 공통 path param인 **memberId**는 `128c4d0f68a34e1ca3c8b51cc01a4b71`를 사용하실 수 있습니다.
    ```
    ### 회원별 적립금 합계 조회 API
    GET {{host}}/api/members/{{memberId}}/points/total
