@@ -1,4 +1,4 @@
-# point-management-system
+# 적립금 관리 시스템
 
 ### Table of Contents
 [I. 실행 환경 구축 방법](#i-실행-환경-구축-방법)
