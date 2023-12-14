@@ -2,7 +2,8 @@ package com.mj.usecase
 
 import com.mj.usecase.exceptions.MemberNotFoundException
 import com.mj.domain.*
-import com.mj.usecase.dto.PointEvent
+import com.mj.usecase.dto.PointEarnedEvent
+import com.mj.usecase.dto.PointUsedEvent
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.orm.ObjectOptimisticLockingFailureException
@@ -22,7 +23,7 @@ class PointAccountService(
         val account = repository.find(MemberId(memberId)) ?: throw MemberNotFoundException(MemberId(memberId))
         account.addPoints(amount)
 
-        eventPublisher.publishEvent(PointEvent(account.accountId, amount))
+        eventPublisher.publishEvent(PointEarnedEvent(account.accountId, amount))
     }
 
     @Retryable(value = [ObjectOptimisticLockingFailureException::class, DataIntegrityViolationException::class])
@@ -31,6 +32,6 @@ class PointAccountService(
         val account = repository.find(MemberId(memberId)) ?: throw MemberNotFoundException(MemberId(memberId))
         account.deductPoints(amount)
 
-        eventPublisher.publishEvent(PointEvent(account.accountId, amount))
+        eventPublisher.publishEvent(PointUsedEvent(account.accountId, amount))
     }
 }

@@ -1,7 +1,9 @@
 package com.mj.controller
 
 import com.mj.usecase.PointTransactionService
-import com.mj.usecase.dto.PointEvent
+import com.mj.usecase.dto.PointCancelledEvent
+import com.mj.usecase.dto.PointEarnedEvent
+import com.mj.usecase.dto.PointUsedEvent
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 
@@ -11,17 +13,17 @@ class PointEventListener(
 ) {
 
     @EventListener
-    fun onPointEarned(event: PointEvent) {
+    fun onPointEarned(event: PointEarnedEvent) {
         service.earn(event.accountId, event.amount)
     }
 
     @EventListener
-    fun onPointUsed(event: PointEvent) {
+    fun onPointUsed(event: PointUsedEvent) {
         service.use(event.accountId, event.amount)
     }
 
     @EventListener
-    fun onPointCancelled(event: PointEvent) {
+    fun onPointCancelled(event: PointCancelledEvent) {
         service.cancel(event.accountId, event.amount)
     }
 }

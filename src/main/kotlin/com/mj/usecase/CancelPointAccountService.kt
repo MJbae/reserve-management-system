@@ -2,7 +2,7 @@ package com.mj.usecase
 
 import com.mj.usecase.exceptions.MemberNotFoundException
 import com.mj.domain.*
-import com.mj.usecase.dto.PointEvent
+import com.mj.usecase.dto.PointCancelledEvent
 import com.mj.usecase.exceptions.UseTransNotFoundException
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.dao.DataIntegrityViolationException
@@ -27,7 +27,7 @@ class CancelPointAccountService(
         val pointsUsed = findLatestUsedPoints(account)
         account.addPoints(pointsUsed)
 
-        eventPublisher.publishEvent(PointEvent(account.accountId, pointsUsed))
+        eventPublisher.publishEvent(PointCancelledEvent(account.accountId, pointsUsed))
     }
 
     private fun findLatestUsedPoints(account: PointAccount): Int {
