@@ -1,10 +1,10 @@
 package com.mj.usecase
 
-import com.mj.controller.PointEventListener
 import com.mj.usecase.exceptions.MemberNotFoundException
 import com.mj.domain.*
 import com.mj.usecase.dto.PointEvent
 import com.mj.usecase.exceptions.UseTransNotFoundException
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional
 class CancelPointAccountService(
     private val repository: PointAccountRepository,
     private val transRepository: PointTransactionRepository,
-    private val eventListener: PointEventListener
+    private val eventPublisher: ApplicationEventPublisher
 ) {
 
     @Retryable(value = [ObjectOptimisticLockingFailureException::class, DataIntegrityViolationException::class])
@@ -27,7 +27,7 @@ class CancelPointAccountService(
         val pointsUsed = findLatestUsedPoints(account)
         account.addPoints(pointsUsed)
 
-        eventListener.onPointCancelled(PointEvent(account.accountId, pointsUsed))
+        eventPublisher.publishEvent(PointEvent(account.accountId, pointsUsed))
     }
 
     private fun findLatestUsedPoints(account: PointAccount): Int {
