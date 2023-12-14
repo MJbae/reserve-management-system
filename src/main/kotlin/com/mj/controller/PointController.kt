@@ -1,6 +1,7 @@
 package com.mj.controller
 
 import com.mj.controller.req.PointTransactionReq
+import com.mj.usecase.CancelPointAccountService
 import com.mj.usecase.GetTotalPointsService
 import com.mj.usecase.LoadPointHistoryService
 import com.mj.usecase.PointAccountService
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController
 class PointController(
     private val totalPointsService: GetTotalPointsService,
     private val loadPointHistoryService: LoadPointHistoryService,
+    private val cancelPointAccountService: CancelPointAccountService,
     private val service: PointAccountService
 ) {
     @GetMapping("/{memberId}/points/total")
@@ -69,6 +71,6 @@ class PointController(
         @PathVariable
         memberId: String
     ) {
-        service.cancelPoint(memberId)
+        cancelPointAccountService.cancelPoint(memberId)
     }
 }
