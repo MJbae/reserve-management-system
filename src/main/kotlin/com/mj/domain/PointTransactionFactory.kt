@@ -10,8 +10,8 @@ class PointTransactionFactory {
         return PointTransaction(type = TransactionType.USE, accountId = accountId, points = amount)
     }
 
-    fun createCancelTrans(useTrans: PointTransaction): PointTransaction {
-        return PointTransaction(type = TransactionType.CANCEL, accountId = useTrans.accountId, points = useTrans.points)
+    fun createCancelTrans(accountId: AccountId, amount: Int): PointTransaction {
+        return PointTransaction(type = TransactionType.CANCEL, accountId = accountId, points = amount)
     }
 }
 

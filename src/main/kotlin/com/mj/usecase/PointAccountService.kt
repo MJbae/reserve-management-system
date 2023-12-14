@@ -1,7 +1,9 @@
 package com.mj.usecase
 
+import com.mj.controller.PointEventListener
 import com.mj.usecase.exceptions.MemberNotFoundException
 import com.mj.domain.*
+import com.mj.usecase.dto.PointEvent
 import com.mj.usecase.exceptions.UseTransNotFoundException
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.domain.PageRequest
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional
 class PointAccountService(
     private val repository: PointAccountRepository,
     private val transRepository: PointTransactionRepository,
+    private val eventListener: PointEventListener
 ) {
     private val transFactory = PointTransactionFactory()
 
@@ -22,42 +25,45 @@ class PointAccountService(
     @Retryable(value = [ObjectOptimisticLockingFailureException::class, DataIntegrityViolationException::class])
     @Transactional
     fun earnPoint(memberId: String, amount: Int) {
-        val pointAccount = repository.find(MemberId(memberId)) ?: throw MemberNotFoundException(MemberId(memberId))
+        val account = repository.find(MemberId(memberId)) ?: throw MemberNotFoundException(MemberId(memberId))
 
-        val earnTrans = transFactory.createEarnTrans(accountId = pointAccount.accountId, amount = amount)
+        val earnTrans = transFactory.createEarnTrans(accountId = account.accountId, amount = amount)
         transRepository.save(earnTrans)
 
-        pointAccount.addPoints(earnTrans.points)
+        account.addPoints(earnTrans.points)
+
+        eventListener.onPointEarned(PointEvent(account.accountId, earnTrans.points))
     }
 
     @Retryable(value = [ObjectOptimisticLockingFailureException::class, DataIntegrityViolationException::class])
     @Transactional
     fun usePoint(memberId: String, amount: Int) {
-        val pointAccount = repository.find(MemberId(memberId)) ?: throw MemberNotFoundException(MemberId(memberId))
+        val account = repository.find(MemberId(memberId)) ?: throw MemberNotFoundException(MemberId(memberId))
 
-        val useTrans = transFactory.createUseTrans(accountId = pointAccount.accountId, amount = amount)
+        val useTrans = transFactory.createUseTrans(accountId = account.accountId, amount = amount)
         transRepository.save(useTrans)
 
-        pointAccount.deductPoints(useTrans.points)
+        account.deductPoints(useTrans.points)
+
+        eventListener.onPointUsed(PointEvent(account.accountId, useTrans.points))
     }
 
 
     @Retryable(value = [ObjectOptimisticLockingFailureException::class, DataIntegrityViolationException::class])
     @Transactional
     fun cancelPoint(memberId: String) {
-        val pointAccount = repository.find(MemberId(memberId)) ?: throw MemberNotFoundException(MemberId(memberId))
+        val account = repository.find(MemberId(memberId)) ?: throw MemberNotFoundException(MemberId(memberId))
 
-        val latestUseTrans = transRepository.findAll(
-            pointAccount.accountId,
+        val useTrans = transRepository.findAll(
+            account.accountId,
             types = setOf(TransactionType.USE),
             pageReq = PageRequest.of(0, 1, Sort.by("createdAt").descending()),
         )
 
-        if (latestUseTrans.isEmpty) throw UseTransNotFoundException(pointAccount.accountId)
+        if (useTrans.isEmpty) throw UseTransNotFoundException(account.accountId)
 
-        val cancelTrans = transFactory.createCancelTrans(latestUseTrans.first())
-        transRepository.save(cancelTrans)
+        account.addPoints(useTrans.first().points)
 
-        pointAccount.addPoints(cancelTrans.points)
+        eventListener.onPointCancelled(PointEvent(account.accountId, useTrans.first().points))
     }
 }
