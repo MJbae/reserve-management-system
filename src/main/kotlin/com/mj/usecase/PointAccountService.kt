@@ -4,10 +4,7 @@ import com.mj.controller.PointEventListener
 import com.mj.usecase.exceptions.MemberNotFoundException
 import com.mj.domain.*
 import com.mj.usecase.dto.PointEvent
-import com.mj.usecase.exceptions.UseTransNotFoundException
 import org.springframework.dao.DataIntegrityViolationException
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Sort
 import org.springframework.orm.ObjectOptimisticLockingFailureException
 import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
@@ -16,23 +13,16 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class PointAccountService(
     private val repository: PointAccountRepository,
-    private val transRepository: PointTransactionRepository,
     private val eventListener: PointEventListener
 ) {
-    private val transFactory = PointTransactionFactory()
-
 
     @Retryable(value = [ObjectOptimisticLockingFailureException::class, DataIntegrityViolationException::class])
     @Transactional
     fun earnPoint(memberId: String, amount: Int) {
         val account = repository.find(MemberId(memberId)) ?: throw MemberNotFoundException(MemberId(memberId))
+        account.addPoints(amount)
 
-        val earnTrans = transFactory.createEarnTrans(accountId = account.accountId, amount = amount)
-        transRepository.save(earnTrans)
-
-        account.addPoints(earnTrans.points)
-
-        eventListener.onPointEarned(PointEvent(account.accountId, earnTrans.points))
+        eventListener.onPointEarned(PointEvent(account.accountId, amount))
     }
 
     @Retryable(value = [ObjectOptimisticLockingFailureException::class, DataIntegrityViolationException::class])
