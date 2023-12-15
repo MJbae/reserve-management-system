@@ -26,6 +26,7 @@ val koTestVersion = "5.5.4"
 val koTestExtensionVersion = "1.1.2"
 
 dependencies {
+    implementation("org.springframework.kafka:spring-kafka")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")

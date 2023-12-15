@@ -21,6 +21,15 @@ spring:
     properties:
       hibernate:
         default_batch_fetch_size: 100
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: point-management-group
+    topic:
+      point:
+        earn: point-earn
+        use: point-use
+        cancel: point-cancel
 
 logging:
   level:

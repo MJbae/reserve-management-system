@@ -53,7 +53,6 @@ class PointController(
         service.usePoint(memberId, req.points)
     }
 
-
     @GetMapping("/{memberId}/points")
     fun loadHistory(
         @PathVariable
