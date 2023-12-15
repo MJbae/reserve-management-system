@@ -3,6 +3,7 @@ package com.mj.usecase
 import com.mj.usecase.exceptions.MemberNotFoundException
 import com.mj.domain.*
 import com.mj.usecase.dto.PointEvent
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.orm.ObjectOptimisticLockingFailureException
@@ -13,7 +14,9 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class PointAccountService(
     private val repository: PointAccountRepository,
-    private val kafkaTemplate: KafkaTemplate<String, PointEvent>
+    private val kafkaTemplate: KafkaTemplate<String, PointEvent>,
+    @Value("\${spring.kafka.topic.point.earn}") private val pointEarnTopic: String,
+    @Value("\${spring.kafka.topic.point.use}") private val pointUseTopic: String,
 ) {
 
     @Retryable(value = [ObjectOptimisticLockingFailureException::class, DataIntegrityViolationException::class])
@@ -22,7 +25,7 @@ class PointAccountService(
         val account = repository.find(MemberId(memberId)) ?: throw MemberNotFoundException(MemberId(memberId))
         account.addPoints(amount)
 
-        kafkaTemplate.send("point-earn", PointEvent(account.accountId.toString(), amount))
+        kafkaTemplate.send(pointEarnTopic, PointEvent(account.accountId.toString(), amount))
     }
 
     @Retryable(value = [ObjectOptimisticLockingFailureException::class, DataIntegrityViolationException::class])
@@ -31,6 +34,6 @@ class PointAccountService(
         val account = repository.find(MemberId(memberId)) ?: throw MemberNotFoundException(MemberId(memberId))
         account.deductPoints(amount)
 
-        kafkaTemplate.send("point-use", PointEvent(account.accountId.toString(), amount))
+        kafkaTemplate.send(pointUseTopic, PointEvent(account.accountId.toString(), amount))
     }
 }

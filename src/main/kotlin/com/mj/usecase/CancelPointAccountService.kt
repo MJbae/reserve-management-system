@@ -4,6 +4,7 @@ import com.mj.usecase.exceptions.MemberNotFoundException
 import com.mj.domain.*
 import com.mj.usecase.dto.PointEvent
 import com.mj.usecase.exceptions.UseTransNotFoundException
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -18,7 +19,7 @@ class CancelPointAccountService(
     private val repository: PointAccountRepository,
     private val transRepository: PointTransactionRepository,
     private val kafkaTemplate: KafkaTemplate<String, PointEvent>,
-//    @Value("\${spring.kafka.topic.point.cancel}") private val pointCancelTopic: String,
+    @Value("\${spring.kafka.topic.point.cancel}") private val pointCancelTopic: String,
 ) {
 
     @Retryable(value = [ObjectOptimisticLockingFailureException::class, DataIntegrityViolationException::class])
@@ -28,7 +29,7 @@ class CancelPointAccountService(
         val pointsUsed = findLatestUsedPoints(account)
         account.addPoints(pointsUsed)
 
-        kafkaTemplate.send("point-cancel", PointEvent(account.accountId.toString(), pointsUsed))
+        kafkaTemplate.send(pointCancelTopic, PointEvent(account.accountId.toString(), pointsUsed))
     }
 
     private fun findLatestUsedPoints(account: PointAccount): Int {

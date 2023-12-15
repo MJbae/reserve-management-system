@@ -11,17 +11,29 @@ class PointEventListener(
     private val service: PointTransactionService
 ) {
 
-    @KafkaListener(topics = ["point-earn"], groupId = "point-management-group", containerFactory = "pointListenerContainerFactory")
+    @KafkaListener(
+        topics = ["\${spring.kafka.topic.point.earn}"],
+        groupId = "point-management-group",
+        containerFactory = "pointListenerContainerFactory"
+    )
     fun onPointEarned(event: PointEvent) {
         service.earn(AccountId(event.accountId), event.amount)
     }
 
-    @KafkaListener(topics = ["point-use"], groupId = "point-management-group", containerFactory = "pointListenerContainerFactory")
+    @KafkaListener(
+        topics = ["\${spring.kafka.topic.point.use}"],
+        groupId = "point-management-group",
+        containerFactory = "pointListenerContainerFactory"
+    )
     fun onPointUsed(event: PointEvent) {
         service.use(AccountId(event.accountId), event.amount)
     }
 
-    @KafkaListener(topics = ["point-cancel"], groupId = "point-management-group", containerFactory = "pointListenerContainerFactory")
+    @KafkaListener(
+        topics = ["\${spring.kafka.topic.point.cancel}"],
+        groupId = "point-management-group",
+        containerFactory = "pointListenerContainerFactory"
+    )
     fun onPointCancelled(event: PointEvent) {
         service.cancel(AccountId(event.accountId), event.amount)
     }
