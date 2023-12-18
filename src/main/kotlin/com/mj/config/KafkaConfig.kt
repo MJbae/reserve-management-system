@@ -1,6 +1,6 @@
 package com.mj.config
 
-import com.mj.usecase.dto.PointEvent
+import com.mj.domain.PointEvent
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringDeserializer

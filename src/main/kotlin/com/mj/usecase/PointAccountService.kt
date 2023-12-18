@@ -2,7 +2,6 @@ package com.mj.usecase
 
 import com.mj.usecase.exceptions.MemberNotFoundException
 import com.mj.domain.*
-import com.mj.usecase.dto.PointEvent
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.kafka.core.KafkaTemplate

@@ -1,8 +1,8 @@
 package com.mj.controller
 
 import com.mj.domain.AccountId
+import com.mj.domain.PointEvent
 import com.mj.usecase.PointTransactionService
-import com.mj.usecase.dto.PointEvent
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
 

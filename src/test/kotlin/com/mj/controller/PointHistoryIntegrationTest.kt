@@ -8,6 +8,7 @@ import com.mj.domain.MemberId
 import com.mj.domain.PointAccount
 import com.mj.domain.TransactionType
 import com.mj.infra.PointAccountJpaRepository
+import com.mj.infra.PointEventOutboxJpaRepository
 import com.mj.infra.PointTransactionJpaRepository
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContain
@@ -21,7 +22,8 @@ import org.springframework.test.web.reactive.server.WebTestClient
 class PointHistoryIntegrationTest(
     private val testClient: WebTestClient,
     private val accountRepository: PointAccountJpaRepository,
-    private val transactionRepository: PointTransactionJpaRepository
+    private val transactionRepository: PointTransactionJpaRepository,
+    private val outboxJpaRepository: PointEventOutboxJpaRepository
 ) : FunSpec({
     val idGenerator = TestIdGenerator()
     val existingMemberId = MemberId(TestConst.EXISTING_MEMBER_ID)
@@ -32,6 +34,7 @@ class PointHistoryIntegrationTest(
     beforeTest {
         transactionRepository.deleteAll()
         accountRepository.deleteAll()
+        outboxJpaRepository.deleteAll()
 
         pointAccount = PointAccount(existingAccountId, existingMemberId)
         accountRepository.save(pointAccount)
